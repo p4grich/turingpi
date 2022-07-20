@@ -1,0 +1,22 @@
+---
+
+# tasks file for bootstrap-core
+# template out /boot/user-data so cloud-init can be rerun if needed.
+# Set hostname from inventory.
+- hosts: all
+  tasks:
+
+    - name: "inventory_hostname being deployed to node:"
+      debug: var=inventory_hostname
+      tags: hostname
+
+    - name: "Set a hostname to:"
+      ansible.builtin.hostname:
+        name: "{{ inventory_hostname }}"
+
+    - name: "Hostname changed to:"
+      debug: var=ansible_hostname
+
+# change /boot/config.txt and /boot/cmdline.txt as needed
+
+# check for requiered sshkeys.
