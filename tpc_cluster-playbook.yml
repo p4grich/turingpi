@@ -2,46 +2,47 @@
 - name: Deploy TP Cluster for k3s Sturgeon Technologies
   hosts: all
   gather_facts: yes
-  become: True
+  become: true
   tasks:
     - name: Print all available facts
       debug:
         var: ansible_facts
-      tags: [ 'never', 'debug' ]
+      tags: ['never', 'debug']
 
     - name: Check var inventory_hostname
       debug: var=inventory_hostname
-      tags: [ 'never', 'debug' ]
+      tags: ['never', 'debug']
 
     - name: Print all hostvars
       debug: var=hostvars
-      tags: [ 'never', 'debug' ]
+      tags: ['never', 'debug']
 
     - name: Release
       debug: msg="{{ ansible_distribution_release }}"
-      tags: [ 'never', 'os_info' ]
+      tags: ['never', 'os_info']
 
     - name: Distribution
       debug: msg="{{ ansible_distribution }}"
-      tags: [ 'never', 'os_info' ]
+      tags: ['never', 'os_info']
 
     - name: Distribution version
       debug: msg="{{ ansible_distribution_version}}"
-      tags: [ 'never', 'os_info' ]
+      tags: ['never', 'os_info']
 
     - name: Distribution major version
       debug: msg="{{ ansible_distribution_major_version }}"
-      tags: [ 'never', 'os_info' ]
+      tags: ['never', 'os_info']
 
     - name: Get OS Name
-      shell: cat {{ ansible_distribution_file_path }} 
+      shell: cat {{ ansible_distribution_file_path }}
       register: os_name
       ignore_errors: yes
-      tags: [ 'never', 'os_info' ]
+      tags: ['never', 'os_info']
 
     - name: Check OS Name
       debug: msg="{{os_name.stdout}}"
-      tags: [ 'never', 'os_info' ]
+      tags: ['never', 'os_info']
 
   roles:
-    - { role: bootstrap-core, tags: ['base'] }
+    - {role: bootstrap-core, tags: ['base']}
+    - {role: docker, tags: ['docker']}

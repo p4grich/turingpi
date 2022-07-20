@@ -2,21 +2,51 @@
 
 # tasks file for bootstrap-core
 # template out /boot/user-data so cloud-init can be rerun if needed.
-# Set hostname from inventory.
-- hosts: all
-  tasks:
-
-    - name: "inventory_hostname being deployed to node:"
-      debug: var=inventory_hostname
-      tags: hostname
-
-    - name: "Set a hostname to:"
-      ansible.builtin.hostname:
-        name: "{{ inventory_hostname }}"
-
-    - name: "Hostname changed to:"
-      debug: var=ansible_hostname
+- name: template /boot/user-data
+  register: k3s_service
+  template:
+    src: user-data.j2
+    dest: /boot/user-data
+    owner: root
+    group: root
+    mode: 0755
+  tags: cloud-init-cfg
 
 # change /boot/config.txt and /boot/cmdline.txt as needed
+- name: Copy config.txt to boot
+  copy:
+    src: config.txt
+    dest: /boot/config.txt
+    #remote_src: no
+    owner: root
+    mode: "0755"
+  tags: 
+    - boot-config
+    - kernel-tuning
+
+- name: Copy cmdline.txt to boot
+  copy:
+    src: cmdline.txt
+    dest: /boot/cmdline.txt
+    remote_src: no
+    owner: root
+    mode: "0755"
+  tags: 
+    - boot-cmdline
+    - kernel-tuning
+
+# Set hostname from inventory.
+- name: "Set a hostname to:"
+  ansible.builtin.hostname:
+    name: "{{ inventory_hostname }}"
+  tags: hostname
 
 # check for requiered sshkeys.
+- name: Set up multiple authorized keys
+  ansible.posix.authorized_key:
+    user: '{{ ansible_user }}'
+    state: present
+    key: '{{ item }}'
+  with_file:
+    - pirate.pub
+  tags: sshkeys
