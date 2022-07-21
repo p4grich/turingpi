@@ -1,4 +1,4 @@
-#!/bin/bash
+# !/bin/bash
 if [[ $@ =~ "--debug" ]]; then
   set -ex
 fi
@@ -7,28 +7,25 @@ if [[ $@ =~ "-h" ]] || [[ -z "$@" ]]; then
 st
   echo "argument help:
 
-  example: 
+  example:
+  $0 dev=/dev/sda image=hypriotos-rpi-v1.12.3.img ip=10.5.94.51 shortname=master-01 -F
   $0 dev=/dev/sda image=hypriotos-rpi-v1.12.3.img ip=10.5.94.51 shortname=master-01 -F --copy-cfg
 
   --debug #  debug
-  -F #  force overwrite image
-  -skip-dd #  skip dd image
-  -copy-cfg #  copy configs
+  -F #  force overwrite image to install fresh image
+  -skip-dd # force skip dd image
+  -copy-cfg #  copy configs only
 
   Arg: 1
-  image#  write iamge to card
-  
-  Arg: 2
   dev=/dev/sda #  cf card device
-
-  Arg: 3
+  
   image=os.img #  image file
 
-  Arg: 4
+  Arg: 3
   ip=10.5.94.51 # set fixed address
 
-  Arg: 5
-  shortname=master-01 # set hostname 
+  Arg: 4
+  shortname=master-01 # set hostname
   "
 fi
 
@@ -46,32 +43,32 @@ if [[ ! -f /usr/bin/pv ]]; then
   exit 1
 fi
 
-if [[ -z "$2" ]]; then
+if [[ -z "$1" ]]; then
   echo "missing device"
   exit 1
 else
-  DEV=$(echo $2| grep dev| awk -F = '{print $2}')
+  DEV=$(echo $1| grep dev| awk -F = '{print $2}')
 fi
 
-if [[ -z "$3" ]]; then
+if [[ -z "$2" ]]; then
   echo "missing image file"
   exit 1
 else
-  IMAGE=$(echo $3| grep image| awk -F = '{print $2}')
+  IMAGE=$(echo $2| grep image| awk -F = '{print $2}')
 fi
 
-if [[ -z "$4" ]]; then
+if [[ -z "$3" ]]; then
   echo "missing ip"
   exit 1
 else
-  ip=$(echo $4| grep ip| awk -F = '{print $2}')
+  ip=$(echo $3| grep ip| awk -F = '{print $2}')
 fi
 
-if [[ -z "$5" ]]; then
+if [[ -z "$4" ]]; then
   echo "missing shortname"
   exit 1
 else
-  shortname=$(echo $5| grep shortname| awk -F = '{print $2}')
+  shortname=$(echo $4| grep shortname| awk -F = '{print $2}')
 fi
 
 if [[ $@ =~ "-F" ]]; then
@@ -205,6 +202,7 @@ if [[ $@ =~ "--copy-cfg" ]]; then
     un_mount
     exit 0
   else
+    echo "Mount not mount"
     echo "--copy-cfg did not find mount, could not copy files: FAILED"
     exit 1
   fi
@@ -217,14 +215,14 @@ fi
 
 if [[ ${skip_dd} == "true" ]]; then
     echo "skipping dd"
-    post_files
+    make_post_file
     un_mount
     exit 0
   else
     if [[ ${os_found} == "rasp" ]] || [[ ${write_status} == "force" ]]; then
       echo "writing image ${IMAGE} to device ${DEV}"
       echo "Are you sure you want to write to the disk at $DEV: CTRL-C to quit"
-      read
+      read pg
       $(/usr/bin/pv ${IMAGE} | sudo dd of=${DEV})
       if [[ $? == 0 ]]; then
         echo "dd image copy to card: PASSWD"
@@ -232,7 +230,8 @@ if [[ ${skip_dd} == "true" ]]; then
         echo "dd image copy to card: FAILED"
         exit 1
       fi
-    echo "already found $os_found"
+    else
+      echo "already found $os_found"
       exit 1
     fi
 
