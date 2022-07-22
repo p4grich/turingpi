@@ -1,0 +1,33 @@
+---
+# tasks file for docker
+# Ensure docker is up and runnig and enabled
+
+- name: Start service docker, if not started
+  ansible.builtin.service:
+    name: docker
+    state: started
+  tags: docker-start
+
+- name: Stop service docker, if started
+  ansible.builtin.service:
+    name: docker
+    state: stopped
+  tags: [ 'never', 'docker-stop' ]
+
+- name: Restart service docker, in all cases
+  ansible.builtin.service:
+    name: docker
+    state: restarted
+  tags: [ 'never', 'docker-restart' ]
+
+- name: Reload service docker, in all cases
+  ansible.builtin.service:
+    name: docker
+    state: reloaded
+  tags: [ 'never', 'docker-reload' ]
+
+- name: Enable service docker, and not touch the state
+  ansible.builtin.service:
+    name: docker
+    enabled: yes
+  tags: docker-enalbed

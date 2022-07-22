@@ -3,7 +3,6 @@
 # tasks file for bootstrap-core
 # template out /boot/user-data so cloud-init can be rerun if needed.
 - name: template /boot/user-data
-  register: k3s_service
   template:
     src: user-data.j2
     dest: /boot/user-data
@@ -17,7 +16,7 @@
   copy:
     src: config.txt
     dest: /boot/config.txt
-    #remote_src: no
+    remote_src: no
     owner: root
     mode: "0755"
   tags: 
@@ -50,3 +49,40 @@
   with_file:
     - pirate.pub
   tags: sshkeys
+
+- name: Update repositories cache and install "i2c-tools" and "python-smbus" package
+  ansible.builtin.apt:
+    update_cache: yes
+    state: present
+    pkg:
+     - i2ctools
+     - python-smbus
+  when: inventory_hostname_short == 'master-01'
+  tags: i2c-tools
+
+- name: Remove useless packages from the cache
+  ansible.builtin.apt:
+    autoclean: yes
+  tags:
+    - apt-autoclean
+    - make-release-deploy
+
+- name: Remove dependencies that are no longer required
+  ansible.builtin.apt:
+    autoremove: yes
+  tags:
+    - apt-autoremove
+    - make-release-deploy
+
+- name: Run the equivalent of "apt-get clean" as a separate step
+  apt:
+    clean: yes
+  tags:
+    - apt-clean
+    - make-release-deploy
+
+- name: Run adhawk ip address apply to bootstrap network ifconfig {{ vinet }} {{ adhawkip }} up
+  shell: |
+    /sbin/ifconfig "{{ vinet }}" "{{ adhawkip }}" up
+    exit 0
+  tags: [ "never", "add-static-address" ]
