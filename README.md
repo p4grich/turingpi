@@ -25,8 +25,11 @@ Bash script to image and setup requierments for auto booting images on TPC
       shortname=master-01 # set hostname
 
 
+Ansible:
+
+Examples
     ansible-playbook -i hosts.yml tpc_cluster-playbook.yml  --limit worker-03   --tags=add-static-address -e "vinet=eth0:1 adhawkip=10.5.94.23" 
 
-MS 1:
+
 
     ansible -i hosts.yml all -m ping
