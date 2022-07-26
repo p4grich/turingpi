@@ -29,7 +29,7 @@
 ## cloud-init and boot config file to review prior to boot image.
 
   - /boot/config.txt   # rpi boot config 
-  - /boot/cmdline.txta # rpi coot config
+  - /boot/cmdline.txt  # rpi coot config
   - /boot/user-data    # cloud-init used by hypriot distribution
 
   review files here: roles/bootstrap-core/templates/ and roles/bootstrap-core/files/
