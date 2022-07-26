@@ -97,3 +97,17 @@
   with_items: "{{ groups.all }}"
   tags: add_hosts
 
+- name: Disable avahi-daemon.service
+  ansible.builtin.service:
+    name: avahi-daemon.service
+    enabled: no
+    state: stopped
+  tags: disable_avahi
+
+- name: Enable avahi-daemon.service
+  ansible.builtin.service:
+    name: avahi-daemon.service
+    enabled: yes
+    state: started
+  tags: [ 'never', 'enable_avahi' ]
+

@@ -89,7 +89,11 @@ Run: k3s_cluster playbook
 See branch k3s_ha for HA deployment on project k3s-ansible.
 
 ---
+## Setting up ESP8266 TuringPi-WiFi-Controller for ping checking and api based node resetting.
 
+
+
+---
 ## Notes:
   ### Projects:
    - https://docs.turingpi.com/
