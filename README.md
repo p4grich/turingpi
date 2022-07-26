@@ -92,6 +92,7 @@ See branch k3s_ha for HA deployment on project k3s-ansible.
 
 ## Notes:
   ### Projects:
+   - https://docs.turingpi.com/
    - https://github.com/k3s-io/k3s-ansible 
    - https://github.com/thorsten-l/ESP8266-TuringPi-WiFi-Controller
 
