@@ -1,0 +1,40 @@
+---
+# tasks file for k8s-sturgeon
+
+- name: Create a k8s namespace sturgeon
+  kubernetes.core.k8s:
+    name: sturgeon-testing
+    api_version: v1
+    kind: Namespace
+    state: present
+  tags: k8s_create_namespace_sturgeon
+
+- name: Create a Service object from an inline definition
+  kubernetes.core.k8s:
+    state: present
+    definition:
+      apiVersion: v1
+      kind: Service
+      metadata:
+        name: web
+        namespace: sturgeon-testing
+        labels:
+          app: galaxy
+          service: web
+      spec:
+        selector:
+          app: galaxy
+          service: web
+        ports:
+          - protocol: TCP
+            targetPort: 8000
+            name: port-8000-tcp
+            port: 8000
+  tags: k8s_create_service_object_sturgeon
+
+- name: Download metrics-server manifest to the cluster.
+  ansible.builtin.get_url:
+    url: https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+    dest: ~/metrics-server.yaml
+    mode: '0664'
+  tags: k8s_download_metrics-server

@@ -101,6 +101,17 @@ http://10.5.94.50/set?slot=[1..7]&power_on=[1|0|true|false] - Set slot power ON|
 ## Diagram
 ![Turing PI deployment diagram](tpc_deployment.png)
 ---
+
+## kubernetes.core.k8s module
+```
+ansible-galaxy collection list
+ansible-galaxy collection install kubernetes.core
+
+```
+
+TODO:
+  - setup ssl certs and k3s/k8s api endpoints 
+
 ## Notes:
   ### Projects:
    - https://docs.turingpi.com/
@@ -109,6 +120,7 @@ http://10.5.94.50/set?slot=[1..7]&power_on=[1|0|true|false] - Set slot power ON|
 
 
   ### Reading:
+  - https://docs.ansible.com/ansible/latest/collections/kubernetes/core/k8s_module.html
   - https://kubernetes.io/docs/reference/kubectl/cheatsheet/
   - https://rancher.com/docs/k3s/latest/en/quick-start/
   - https://rancher.com/docs/k3s/latest/en/advanced

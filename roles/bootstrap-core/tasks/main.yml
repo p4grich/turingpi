@@ -50,12 +50,19 @@
     - pirate.pub
   tags: sshkeys
 
+- name: apt update
+  ansible.builtin.apt:
+    update_cache: yes
+  tags:
+    - apt-update
+    - make-release-deploy
+
 - name: Update repositories cache and install "i2c-tools" and "python-smbus" package
   ansible.builtin.apt:
     update_cache: yes
     state: present
     pkg:
-     - i2ctools
+     - i2c-tools
      - python-smbus
   when: inventory_hostname_short == 'master-01'
   tags: i2c-tools
@@ -110,4 +117,12 @@
     enabled: yes
     state: started
   tags: [ 'never', 'enable_avahi' ]
+
+- name: Activating cgroup support
+  lineinfile:
+    path: /boot/cmdline.txt
+    regexp: '^((?!.*\bcgroup_enable=cpuset cgroup_memory=1 cgroup_enable=memory\b).*)$'
+    line: '\1 cgroup_enable=cpuset cgroup_memory=1 cgroup_enable=memory'
+    backrefs: true
+  notify: reboot
 

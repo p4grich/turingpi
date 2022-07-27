@@ -46,3 +46,10 @@
   roles:
     - {role: bootstrap-core, tags: ['base']}
     - {role: docker, tags: ['docker']}
+
+- hosts: localhost
+  connection: local
+  roles:
+    - {role: k8s-sturgeon, tags: ['k8s_core']}
+  environment:
+    KUBECONFIG: '~/.kube/config:~/.kube/kubconfig2'
