@@ -1,0 +1,5 @@
+---
+nic_name: master02
+ansible_user: pirate
+ansible_connection: ssh
+systemd_dir: /etc/systemd/system

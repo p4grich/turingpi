@@ -98,9 +98,9 @@
   lineinfile:
     dest: /etc/hosts
     regexp: '.*{{ item }}$'
-    line: "{{ hostvars[item].ansible_host }} {{item}}"
+    line: "{{ hostvars[item].ansible_host }} {{ item }} {{ hostvars[item].nic_name }}"
     state: present
-  when: hostvars[item].ansible_host is defined
+  when: hostvars[item].ansible_host and hostvars[item].nic_name is defined
   with_items: "{{ groups.all }}"
   tags: add_hosts
 
@@ -117,6 +117,24 @@
     enabled: yes
     state: started
   tags: [ 'never', 'enable_avahi' ]
+
+- name: set sysctl -w vm.dirty_ratio=10
+  ansible.posix.sysctl:
+    name: vm.dirty_ratio
+    value: '10'
+    sysctl_set: yes
+    state: present
+    reload: yes
+  tags: enable_dirty_ratio
+
+- name: set sudo sysctl -w vm.dirty_background_ratio=5
+  ansible.posix.sysctl:
+    name: vm.dirty_background_ratio
+    value: '5'
+    sysctl_set: yes
+    state: present
+    reload: yes
+  tags: enable_dirty_background_ratio
 
 - name: Activating cgroup support
   lineinfile:
