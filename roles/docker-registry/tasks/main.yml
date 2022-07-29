@@ -1,0 +1,21 @@
+---
+# tasks file for docker-registry
+- name: Add docker-registry package
+  ansible.builtin.apt:
+    name: docker-registry
+    state: present
+  tags: install_docker-registry
+
+- name: Enable and start docker-registry
+  ansible.builtin.systemd:
+    name: docker-registry
+    state: started
+    enabled: yes
+  tags: start_enable_docker-registry
+
+- name: disable and stop docker-registry
+  ansible.builtin.systemd:
+    name: docker-registry
+    state: stopped
+    enabled: no
+  tags: ['never', 'stop_disabled_docker-registry']
