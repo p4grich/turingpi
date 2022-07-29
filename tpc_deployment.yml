@@ -1,6 +1,6 @@
 ---
 - name: Deploy TP Cluster for k3s Sturgeon Technologies
-  hosts: all
+  hosts: k3s_cluster
   gather_facts: yes
   become: true
   tasks:
@@ -46,6 +46,10 @@
   roles:
     - {role: bootstrap-core, tags: ['base']}
     - {role: docker, tags: ['docker']}
+
+- hosts: master-02
+  roles:
+    - {role: docker-registry, tags: ['docker-registry']}
 
 - hosts: localhost
   connection: local
