@@ -118,9 +118,11 @@ TODO:
    - https://github.com/k3s-io/k3s-ansible 
    - https://github.com/thorsten-l/ESP8266-TuringPi-WiFi-Controller
 
-
   ### Reading:
   - https://docs.ansible.com/ansible/latest/collections/kubernetes/core/k8s_module.html
   - https://kubernetes.io/docs/reference/kubectl/cheatsheet/
   - https://rancher.com/docs/k3s/latest/en/quick-start/
   - https://rancher.com/docs/k3s/latest/en/advanced
+
+  ### Bugs/Known Issues
+  - https://github.com/raspberrypi/linux/issues/2810

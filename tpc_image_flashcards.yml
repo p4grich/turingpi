@@ -1,0 +1,5 @@
+---
+- hosts: localimageflashcards
+  connection: local
+  roles:
+    - {role: image-flashcards, tags: ['image-flashcards']}
