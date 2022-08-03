@@ -3,3 +3,8 @@
   connection: local
   roles:
     - {role: image-flashcards, tags: ['image-flashcards']}
+
+- hosts: repairhosts
+  connection: ssh
+  roles:
+    - {role: image-flashcards, tags: ['image-flashcards']}

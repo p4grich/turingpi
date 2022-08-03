@@ -36,6 +36,8 @@ package_update: true
 # # Install any additional apt packages you need here
 packages:
  - i2c-tools
+ - rng-tools
+ - haveged
  - python-smbus
  - nmap
 
@@ -46,35 +48,19 @@ write_files:
      auto lo
      iface lo inet loopback
 
-     #auto eth0
-     #iface eth0 inet dhcp
-
      auto eth0
      iface eth0 inet static
        address {{ nic_ip }}
        netmask {{ nic_netmask }}
-       gateway {{ nic_gateway}} 
-   path: /etc/network/interfaces.d/50-cloud-init.cfg
+       gateway {{ nic_gateway}}
+       dns-nameserver {{ dns_server }}
+       dns-search {{ search_domain }}
 
-#   - content: |
-#       country=de
-#       ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
-#       update_config=1
-#       network={
-#       ssid="YOUR_WIFI_SSID"
-#       psk="YOUR_WIFI_PASSWORD"
-#       proto=RSN
-#       key_mgmt=WPA-PSK
-#       pairwise=CCMP
-#       auth_alg=OPEN
-#       }
-#     path: /etc/wpa_supplicant/wpa_supplicant.conf
+   path: /etc/network/interfaces.d/50-cloud-init.cfg
 
 # These commands will be ran once on first boot only
 runcmd:
   # Pickup the hostname changes
-  #- '/sbin/ifconfig eth0:1'
-  #- '/sbin/ifup eth0:1'
   - 'systemctl stop avahi-daemon'
   - 'systemctl disabled avahi-daemon'
   - 'reboot'

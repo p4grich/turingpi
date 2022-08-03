@@ -4,6 +4,7 @@
   ansible.builtin.apt:
     name: docker-registry
     state: present
+    update_cache: yes
   tags: install_docker-registry
 
 - name: Enable and start docker-registry

@@ -47,7 +47,7 @@
     - {role: bootstrap-core, tags: ['base']}
     - {role: docker, tags: ['docker']}
 
-- hosts: master-02
+- hosts: master-02*
   roles:
     - {role: docker-registry, tags: ['docker-registry']}
 

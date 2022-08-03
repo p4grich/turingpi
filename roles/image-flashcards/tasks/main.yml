@@ -6,9 +6,6 @@
   template:
     src: user-data.j2
     dest: "{{cf_mount_boot}}/user-data"
-    owner: root
-    group: root
-    mode: 0755
   tags: local-cloud-init-cfg
 
 # change /boot/config.txt and /boot/cmdline.txt as needed
@@ -17,8 +14,6 @@
     src: config.txt
     dest: "{{cf_mount_boot}}/config.txt"
     remote_src: no
-    owner: root
-    mode: "0755"
   tags: local-boot-config
 
 - name: Copy cmdline.txt to boot
@@ -26,8 +21,6 @@
     src: cmdline.txt
     dest: "{{cf_mount_boot}}/cmdline.txt"
     remote_src: no
-    owner: root
-    mode: "0755"
   tags: local-boot-cmdline
 
 - name: Add IP address of all hosts to all hosts
@@ -36,6 +29,7 @@
     regexp: '.*{{ item }}$'
     line: "{{ hostvars[item].ansible_host }} {{ item }} {{ hostvars[item].nic_name }}"
     state: present
+  become: yes
   when: hostvars[item].ansible_host and hostvars[item].nic_name is defined
   with_items: "{{ groups.all }}"
   tags: local-add_hosts

@@ -1,0 +1,3 @@
+---
+cf_mount_root: "/media/moto/root"
+cf_mount_boot: "/media/moto/HypriotOS"

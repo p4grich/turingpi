@@ -1,30 +1,32 @@
 # Automaton for TP Cluster.
 ---
-## Bash script to image and setup requierments for auto booting images on TPC
-        
-    image-flashcards.sh: linux shell script to install HypiorOS on cf cards and tune cloud-init for use with ansible
-            
-    argument help:
-      image-flashcards.sh dev=/dev/sda image=hypriotos-rpi-v1.12.3.img ip=10.5.94.51 shortname=master-01 -F
-      image-flashcards.sh dev=/dev/sda image=hypriotos-rpi-v1.12.3.img ip=10.5.94.51 shortname=master-01 -F --copy-cfg
 
-      --debug #  debug
-      -F #  force overwrite image to install fresh image
-      -skip-dd # force skip dd image
-      -copy-cfg #  copy configs only
+## Imaging flashcards:
+  Write image:
+```
+/usr/bin/pv ${IMAGE} | sudo dd of=${DEV}
+```
+```
+ansible-playbook -i hosts.yml -l localimageflashcards tpc_image_flashcards.yml --ask-become-pass -e "fc_boot=/home/$USER/boot fc_root=/home/$USER/root shortname=master-02 nic_ip=10.5.94.41 nic_gateway=255.255.255.0 nic_netmask=255.255.255.0 dns_server=10.10.42.1 search_domain=kanati.io"" -vv
+ansible-playbook -i hosts.yml -l repairhosts tpc_image_flashcards.yml --ask-become-pass -e "fc_boot=/boot fc_root=/ shortname=master-02 nic_ip=10.5.94.41 nic_gateway=255.255.255.0 nic_netmask=255.255.255.0 dns_server=10.10.42.1 search_domain=kanati.io" -vv
+```
 
-      Arg: 1
-      dev=/dev/sda #  cf card device
-      
-      image=os.img #  image file
+### tpc_image_flashcards:
+Required hosts:
 
-      Arg: 3
-      ip=10.5.94.51 # set fixed address
+- localimageflashcards
+- repairhosts
 
-      Arg: 4
-      shortname=master-01 # set hostname
+Required vars example:
 
----
+- shortname=master-02
+- nic_ip=10.10.42.41
+- nic_gateway=255.255.255.0
+- nic_netmask=255.255.255.0
+- dns_server=10.10.5.1
+- search_domain=kanati.io
+- fc_root=/home/$USER/root
+- fc_boot=/home/$USER/boot
 
 ## cloud-init and boot config file to review prior to boot image.
 
@@ -34,7 +36,7 @@
 
   review files here: roles/bootstrap-core/templates/ and roles/bootstrap-core/files/
 
-  See user-data for prepopulating the deployment ssh keys.
+  See user-data for repopulating the deployment ssh keys.
 
 ## Ansible inventory:
 
